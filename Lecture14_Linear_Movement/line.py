@@ -1,5 +1,6 @@
 import turtle
 import random
+import math
 
 
 def stop():
@@ -52,11 +53,30 @@ def draw_point(p):
 
 def draw_line(p1, p2):
     # 여기를 채우시오.
-    pass
+
+    #draw_big_point(p1)
+    #draw_big_point(p2)
+
+    x1, y1 = p1
+    x2, y2 = p2
+
+
+    # t: 0 ~ 1로 조잘하면서 m(t) = (1-t)p1 + t p2
+    for i in range(0,600+1):
+        t = i / 100.0 * math.pi * 4
+        a = 0.7
+        b = 1.0
+        x = (a - b) * math.cos(t) + b * math.cos(t * (a / b - 1))
+        y = (a - b) * math.sin(t) - b * math.sin(t * (a / b - 1))
+        draw_point((x * 200, y * 200))
+        pass
 
 
 prepare_turtle_canvas()
 
 # 여기를 채우시오.
+p1 = (200, -200)
+p2 = (200, 300)
+draw_line(p1, p2)
 
 turtle.done()

@@ -40,6 +40,11 @@ class Zombie:
         game_world.add_object(self.arrow, 2)
 
         # 여기를 채우시오.
+        # 좀비가 손가락이 가리키는 곳으로 가야한다.
+        self.sx, self.sy = self.x, self.y # 시작 좌표
+        self.tx, self.ty = self.arrow.x, self.arrow.y # 도착 좌표
+        self.t = 0.0
+        self.d = math.sqrt((self.tx - self.sx) **2 + (self.ty - self.sy) **2)
 
 
     def get_bb(self):
@@ -50,8 +55,16 @@ class Zombie:
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION
 
         # 여기를 채우시오.
-
-
+        if self.t < 1.0:
+            self.t += game_framework.frame_time * RUN_SPEED_PPS / self.d
+            self.x = self.sx * (1.0 - self.t) + (self.arrow.x * self.t)
+            self.y = self.sy * (1.0 - self.t) + (self.arrow.y * self.t)
+        else:
+            self.x, self.y = self.arrow.x, self.arrow.y
+            self.t = 0.0
+            self.arrow.reset_position()
+            self.sx, self.sy = self.x, self.y
+            self.d = math.sqrt((self.arrow.x - self.x) ** 2 + (self.arrow.y - self.y) ** 2)
 
     def draw(self):
         if self.x > self.arrow.x:

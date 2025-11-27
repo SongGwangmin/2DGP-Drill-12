@@ -115,7 +115,8 @@ class Zombie:
 
     def run_little_to(self, tx, ty):
         self.dir = math.atan2(ty - self.y, tx - self.x)
-        self.dir += math.pi  # 반대 방향으로 도망가기
+          # 반대 방향으로 도망가기
+        self.dir += math.pi
         distance = RUN_SPEED_PPS * game_framework.frame_time
         self.x += distance * math.cos(self.dir)
         self.y += distance * math.sin(self.dir)
@@ -133,16 +134,7 @@ class Zombie:
         else:
             return BehaviorTree.RUNNING
 
-    def run_to(self, r=0.5):
-            # 여기를 채우시오.
-        self.state = 'Walk'
-        self.run_little_to(self.tx, self.ty)
 
-            # 목표 지점에 거의 도착했으면 성공 리턴
-        if self.distance_less_than(self.x, self.y, self.tx, self.ty, r):
-            return BehaviorTree.SUCCESS
-        else:
-            return BehaviorTree.RUNNING
 
 
 
@@ -168,6 +160,16 @@ class Zombie:
         self.state = 'Walk'
         self.move_little_to(common.boy.x, common.boy.y)
         # 소년에 근접했으면 성공 리턴
+        if self.distance_less_than(common.boy.x, common.boy.y, self.x, self.y, r):
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.RUNNING
+
+    def run_to_boy(self, r=0.5):
+            # 여기를 채우시오.
+        self.state = 'Walk'
+        self.run_little_to(common.boy.x, common.boy.y)
+            # 소년에 근접했으면 성공 리턴
         if self.distance_less_than(common.boy.x, common.boy.y, self.x, self.y, r):
             return BehaviorTree.SUCCESS
         else:
@@ -199,7 +201,7 @@ class Zombie:
         a4 = Action('소년 추적', self.move_to_boy)
 
         c_ball_count = Condition('좀비의 공이 소년보다 많거나 같은가?', self.ball_count_check)
-        a_run = Action('소년에게서 도망가기', self.run_to)
+        a_run = Action('소년에게서 도망가기', self.run_to_boy)
 
         check_and_run = Sequence('공이 많거나 같으면 도망가기', c_ball_count, a_run)
         chase_or_run = Selector('추적 또는 도망가기', check_and_run, a4)

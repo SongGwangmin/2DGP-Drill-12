@@ -203,7 +203,7 @@ class Zombie:
         c_ball_count = Condition('좀비의 공이 소년보다 많거나 같은가?', self.ball_count_check)
         a_run = Action('소년에게서 도망가기', self.run_to_boy)
 
-        check_and_run = Sequence('공이 많거나 같으면 도망가기', c_ball_count, a_run)
+        check_and_run = Sequence('공이 많으면 도망가기', c_ball_count, a_run)
         chase_or_run = Selector('추적 또는 도망가기', check_and_run, a4)
 
         chase_if_boy_nearby = Sequence('소년이 근처에 있으면 추적', c1, chase_or_run)

@@ -164,6 +164,11 @@ class Zombie:
         return BehaviorTree.SUCCESS
         pass
 
+    def ball_count_check(self, count):
+        if common.boy.ball_count <= self.ball_count:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
 
     def build_behavior_tree(self): # sequence
         # 여기를 채우시오.
@@ -174,14 +179,18 @@ class Zombie:
         wander = Sequence('배회', a3, a2)
         c1 = Condition('소년이 근처에 있는가?', self.if_boy_nearby, 7)
         a4 = Action('소년 추적', self.move_to_boy)
+
+        
+
+
         chase_if_boy_nearby = Sequence('소년이 근처에 있으면 추적', c1, a4)
 
-        chase_or_wander = Selector('소년이 가까이 있으면 추적하고, 아니면 배회', chase_if_boy_nearby, wander)
+        root = chase_or_wander = Selector('소년이 가까이 있으면 추적하고, 아니면 배회', chase_if_boy_nearby, wander)
 
         a5 = Action('다음 순찰 위치를 가져오기', self.get_patrol_location)
         patrol = Sequence('순찰', a5, a2)
 
-        chase_or_patrol = Selector('추적 또는 순찰', chase_if_boy_nearby, patrol)
+        Selector('추적 또는 순찰', chase_if_boy_nearby, patrol)
 
 
         self.behavior_tree = BehaviorTree(root)
